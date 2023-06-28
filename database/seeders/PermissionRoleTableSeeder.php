@@ -19,12 +19,13 @@ class PermissionRoleTableSeeder extends Seeder
         $admin_permissions = Permission::all();
 
         $agent_permissions = Permission::whereIn('title', [
-            'category_show',
-            'category_access',
-            'label_show',
-            'label_access',
             'ticket_show',
             'ticket_access',
+            'ticket_create',
+            'ticket_edit',
+            'client_create',
+            'client_edit',
+            'client_access',
         ])->get();
 
         Role::findOrFail(1)->permissions()->sync($admin_permissions);

@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Builder;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    // dd(User::whereHas('roles', function (Builder $query) {
+    //     $query->where('title', Role::ROLES['Staff']);
+    // })
+    //     ->get());
     return view('welcome');
 });

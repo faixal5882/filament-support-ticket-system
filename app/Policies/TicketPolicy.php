@@ -30,7 +30,7 @@ class TicketPolicy
      */
     public function view(User $user, Ticket $ticket)
     {
-        return $user->hasPermission('ticket_show');
+        return $user->hasPermission('ticket_show') && ($user->hasRole('Admin') || $user->id === $ticket->assigned_to);
     }
 
     /**
@@ -53,7 +53,7 @@ class TicketPolicy
      */
     public function update(User $user, Ticket $ticket)
     {
-        return $user->hasPermission('ticket_edit');
+        return $user->hasPermission('ticket_edit') && $user->id == $ticket->assigned_to;
     }
 
     /**

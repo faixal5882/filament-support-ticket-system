@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Ticket extends Model
@@ -20,18 +21,17 @@ class Ticket extends Model
     const STATUS = [
         'Open' => 'Open',
         'Closed' => 'Closed',
-        'Archived' => 'Archived',
+        'Solved' => 'Solved',
     ];
 
     protected $fillable = [
-        'title',
         'description',
         'priority',
         'status',
-        'is_resolved',
-        'comment',
         'assigned_by',
         'assigned_to',
+        'country_id',
+        'client_id',
     ];
 
     public function assignedBy(): BelongsTo
@@ -49,8 +49,18 @@ class Ticket extends Model
         return $this->belongsToMany(Category::class);
     }
 
-    public function labels(): BelongsToMany
+    public function comments(): HasMany
     {
-        return $this->belongsToMany(Label::class);
+        return $this->hasMany(Comment::class);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function client(): BelongsTo
+    {
+        return $this->belongsTo(Client::class);
     }
 }

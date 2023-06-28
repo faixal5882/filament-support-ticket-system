@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use Closure;
+use App\Models\Role;
 use Filament\Tables;
 use App\Models\Ticket;
 use Filament\Tables\Columns\TextColumn;
@@ -19,21 +20,24 @@ class LatestTickets extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        return Ticket::query()
+        $ticketQuery = Ticket::query()
             ->latest()
             ->limit(5);
+
+        return auth()->user()->hasRole(Role::ROLES['Admin']) ?  $ticketQuery : $ticketQuery->where('assigned_to', auth()->id());
     }
 
     protected function getTableColumns(): array
     {
         return [
-            TextColumn::make('title')
+            TextColumn::make('client.name')
                 ->sortable()
                 ->description(fn (Ticket $record): string => $record?->description ?? ''),
+            TextColumn::make('country.name'),
             BadgeColumn::make('status')
                 ->sortable()
                 ->colors([
-                    'warning' => Ticket::STATUS['Archived'],
+                    'warning' => Ticket::STATUS['Solved'],
                     'success' => Ticket::STATUS['Closed'],
                     'danger' => Ticket::STATUS['Open'],
                 ])
@@ -48,7 +52,6 @@ class LatestTickets extends BaseWidget
                 ->enum(Ticket::PRIORITY),
             TextColumn::make('assignedTo.name'),
             TextColumn::make('assignedBy.name'),
-            TextInputColumn::make('comment'),
             TextColumn::make('created_at')
                 ->sortable()
                 ->dateTime(),

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\LabelResource\Pages;
+namespace App\Filament\Resources\ClientResource\Pages;
 
+use App\Filament\Resources\ClientResource;
 use Filament\Pages\Actions;
-use App\Filament\Resources\LabelResource;
 use Filament\Resources\Pages\ListRecords;
 
-class ListLabels extends ListRecords
+class ListClients extends ListRecords
 {
-    protected static string $resource = LabelResource::class;
+    protected static string $resource = ClientResource::class;
 
     protected function getActions(): array
     {

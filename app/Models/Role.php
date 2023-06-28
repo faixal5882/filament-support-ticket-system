@@ -11,7 +11,7 @@ class Role extends Model
 
     const ROLES = [
         'Admin' => 'Admin',
-        'Agent' => 'Agent',
+        'Staff' => 'Staff',
     ];
 
     protected $fillable = [

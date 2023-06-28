@@ -22,7 +22,7 @@ class RolesTableSeeder extends Seeder
             ],
             [
                 'id' => 2,
-                'title' => Role::ROLES['Agent'],
+                'title' => Role::ROLES['Staff'],
             ],
         ];
 

@@ -12,21 +12,19 @@ use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Columns\TextInputColumn;
 use App\Filament\Resources\TicketResource\Pages;
-use App\Filament\Resources\TicketResource\RelationManagers\LabelsRelationManager;
 use App\Filament\Resources\TicketResource\RelationManagers\CategoriesRelationManager;
+use App\Filament\Resources\TicketResource\RelationManagers\CommentsRelationManager;
 
 class TicketResource extends Resource
 {
     protected static ?string $model = Ticket::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
 
     protected function getDefaultTableSortColumn(): ?string
     {
@@ -43,25 +41,33 @@ class TicketResource extends Resource
         return $form
             ->columns(1)
             ->schema([
-                TextInput::make('title')
-                    ->required(),
+                Select::make('country_id')
+                    ->required()
+                    ->relationship('country', 'name'),
+                Select::make('client_id')
+                    ->required()
+                    ->relationship('client', 'name'),
                 Select::make('priority')
                     ->options(self::$model::PRIORITY)
                     ->required()
                     ->in(self::$model::PRIORITY),
+                Select::make('status')
+                    ->options(self::$model::STATUS)
+                    ->required()
+                    ->hiddenOn('create')
+                    ->in(self::$model::STATUS),
                 Select::make('assigned_to')
                     ->options(
                         User::whereHas('roles', function (Builder $query) {
-                            $query->where('name', Role::ROLES['Agent']);
+                            $query->where('title', Role::ROLES['Staff']);
                         })
                             ->get()
                             ->pluck('name', 'id')
                             ->toArray()
                     )
                     ->required(),
-                Textarea::make('description'),
-                Textarea::make('comment'),
 
+                Textarea::make('description'),
             ]);
     }
 
@@ -69,9 +75,10 @@ class TicketResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title')
-                    ->sortable()
-                    ->description(fn (Ticket $record): string => $record?->description ?? ''),
+                TextColumn::make('client.name')
+                    ->sortable(),
+                TextColumn::make('country.name')
+                    ->sortable(),
                 SelectColumn::make('status')
                     ->disabled(!auth()->user()->hasPermission('ticket_edit'))
                     ->disablePlaceholderSelection()
@@ -87,8 +94,6 @@ class TicketResource extends Resource
                     ->enum(self::$model::PRIORITY),
                 TextColumn::make('assignedTo.name'),
                 TextColumn::make('assignedBy.name'),
-                TextInputColumn::make('comment')
-                    ->disabled(!auth()->user()->hasPermission('ticket_edit')),
                 TextColumn::make('created_at')
                     ->sortable()
                     ->dateTime(),
@@ -112,8 +117,8 @@ class TicketResource extends Resource
     public static function getRelations(): array
     {
         return [
+            CommentsRelationManager::class,
             CategoriesRelationManager::class,
-            LabelsRelationManager::class,
         ];
     }
 

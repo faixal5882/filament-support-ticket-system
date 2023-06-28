@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\UserResource\Pages;
+namespace App\Filament\Resources\ClientResource\Pages;
 
 use Filament\Pages\Actions;
-use Illuminate\Support\Facades\Hash;
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\ClientResource;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateUser extends CreateRecord
+class CreateClient extends CreateRecord
 {
-    protected static string $resource = UserResource::class;
+    protected static string $resource = ClientResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -18,7 +17,7 @@ class CreateUser extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['password'] = Hash::make($data['password']);
+        $data['created_by'] = auth()->id();
 
         return $data;
     }

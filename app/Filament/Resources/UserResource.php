@@ -8,8 +8,12 @@ use Filament\Tables;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\SelectColumn;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -30,7 +34,13 @@ class UserResource extends Resource
                 TextInput::make('email')->type('email'),
                 TextInput::make('password')
                     ->password()
+                    ->hiddenOn('edit')
                     ->disableAutocomplete(),
+                Select::make('roles')
+                    ->multiple()
+                    ->preload()
+                    ->relationship('roles', 'title')
+
             ]);
     }
 
@@ -40,12 +50,14 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('email'),
+                TagsColumn::make('roles.title'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -55,7 +67,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RolesRelationManager::class,
+            // RolesRelationManager::class,
         ];
     }
 

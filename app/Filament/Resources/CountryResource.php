@@ -2,28 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
 use Filament\Tables;
-use App\Models\Label;
+use App\Models\Country;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\Checkbox;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\ToggleColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Tables\Columns\CheckboxColumn;
-use App\Filament\Resources\LabelResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\LabelResource\RelationManagers;
+use App\Filament\Resources\CountryResource\Pages;
 
-class LabelResource extends Resource
+class CountryResource extends Resource
 {
-    protected static ?string $model = Label::class;
+    protected static ?string $model = Country::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static ?string $navigationIcon = 'heroicon-o-flag';
 
     public static function form(Form $form): Form
     {
@@ -31,8 +23,6 @@ class LabelResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->required(),
-
-                Toggle::make('is_active'),
             ]);
     }
 
@@ -40,9 +30,8 @@ class LabelResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
-                ToggleColumn::make('is_active')
-                    ->disabled(!auth()->user()->hasPermission('category_edit'))
+                TextColumn::make('name')
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -66,9 +55,9 @@ class LabelResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListLabels::route('/'),
-            'create' => Pages\CreateLabel::route('/create'),
-            'edit' => Pages\EditLabel::route('/{record}/edit'),
+            'index' => Pages\ListCountries::route('/'),
+            'create' => Pages\CreateCountry::route('/create'),
+            'edit' => Pages\EditCountry::route('/{record}/edit'),
         ];
     }
 }

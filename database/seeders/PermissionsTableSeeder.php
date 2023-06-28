@@ -62,19 +62,34 @@ class PermissionsTableSeeder extends Seeder
                 'title' => 'category_access',
             ],
             [
-                'title' => 'label_create',
+                'title' => 'client_create',
             ],
             [
-                'title' => 'label_edit',
+                'title' => 'client_edit',
             ],
             [
-                'title' => 'label_show',
+                'title' => 'client_show',
             ],
             [
-                'title' => 'label_delete',
+                'title' => 'client_delete',
             ],
             [
-                'title' => 'label_access',
+                'title' => 'client_access',
+            ],
+            [
+                'title' => 'country_create',
+            ],
+            [
+                'title' => 'country_edit',
+            ],
+            [
+                'title' => 'country_show',
+            ],
+            [
+                'title' => 'country_delete',
+            ],
+            [
+                'title' => 'country_access',
             ],
             [
                 'title' => 'ticket_create',
